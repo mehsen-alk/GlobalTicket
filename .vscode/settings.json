@@ -1,3 +1,6 @@
 {
-    "dotnet.defaultSolution": "GloboTicket.TicketManagement.sln"
+    "dotnet.defaultSolution": "GloboTicket.TicketManagement.sln",
+    "cSpell.words": [
+        "Globo"
+    ]
 }
