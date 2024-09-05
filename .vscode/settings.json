@@ -1,6 +1,10 @@
 {
-    "dotnet.defaultSolution": "GloboTicket.TicketManagement.sln",
-    "cSpell.words": [
-        "Globo"
-    ]
+  "dotnet.defaultSolution": "GloboTicket.TicketManagement.sln",
+  "cSpell.words": [
+    "Globo"
+  ],
+  "files.exclude": {
+    "**/bin": true,
+    "**/obj": true,
+  }
 }
