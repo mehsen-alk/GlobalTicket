@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\GloboTicket.TicketManagement.Domain\GloboTicket.TicketManagement.Domain.csproj" />
@@ -9,5 +9,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.*" />
+    <PackageReference Include="MediatR" Version="12.4.0" />
+  </ItemGroup>
 
 </Project>
