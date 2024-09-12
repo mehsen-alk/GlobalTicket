@@ -2,6 +2,7 @@
 using GloboTicket.TicketManagement.Application.Features.Events.Command.CreateEvent;
 using GloboTicket.TicketManagement.Application.Features.Events.Commands.DeleteEvent;
 using GloboTicket.TicketManagement.Application.Features.Events.Commands.UpdateEvent;
+using GloboTicket.TicketManagement.Application.Features.Events.Queries.GetEventsExports;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -62,13 +63,13 @@ namespace GloboTicket.TicketManagement.Api.Controllers
             return NoContent();
         }
 
-        // [HttpGet("export", Name = "ExportEvents")]
-        // public async Task<FileResult> ExportEvents()
-        // {
-        //     var fileDto = await _mediator.Send(new GetEventsExportQuery());
+        [HttpGet("export", Name = "ExportEvents")]
+        public async Task<FileResult> ExportEvents()
+        {
+            var fileDto = await _mediator.Send(new GetEventsExportsQuery());
 
-        //     return File(fileDto.Data, fileDto.ContentType, fileDto.EventExportFileName);
-        // }
+            return File(fileDto.Data, fileDto.ContentType, fileDto.EventExportFileName);
+        }
 
     }
 }
