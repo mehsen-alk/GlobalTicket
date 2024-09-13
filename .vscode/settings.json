@@ -1,7 +1,8 @@
 {
   "dotnet.defaultSolution": "GloboTicket.TicketManagement.sln",
   "cSpell.words": [
-    "Globo"
+    "Globo",
+    "Serilog"
   ],
   "files.exclude": {
     "**/bin": true,

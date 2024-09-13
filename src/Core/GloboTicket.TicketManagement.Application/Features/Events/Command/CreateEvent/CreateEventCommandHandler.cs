@@ -4,6 +4,7 @@ using GloboTicket.TicketManagement.Application.Contracts.Persistence;
 using GloboTicket.TicketManagement.Application.Exceptions;
 using GloboTicket.TicketManagement.Application.Models.Mail;
 using GloboTicket.TicketManagement.Domain.Entities;
+using Microsoft.Extensions.Logging;
 using MediatR;
 
 namespace GloboTicket.TicketManagement.Application.Features.Events.Command.CreateEvent
@@ -13,8 +14,9 @@ namespace GloboTicket.TicketManagement.Application.Features.Events.Command.Creat
         private readonly IEventRepository _eventRepository;
         private readonly IMapper _mapper;
         private readonly IEmailService _emailService;
+        private readonly ILogger<CreateEventCommandHandler> _logger;
 
-        public CreateEventCommandHandler(IEventRepository eventRepository, IMapper mapper, IEmailService emailService)
+        public CreateEventCommandHandler(IEventRepository eventRepository, IMapper mapper, IEmailService emailService, ILogger<CreateEventCommandHandler> _logger)
         {
             _eventRepository = eventRepository;
             _mapper = mapper;
@@ -34,13 +36,15 @@ namespace GloboTicket.TicketManagement.Application.Features.Events.Command.Creat
 
             @event = await _eventRepository.AddAsync(@event);
 
-            var email = new Email() {To = "gill@snowball.be", Body = $"A new event was created: {request}", Subject = "A new email was created"};
+            var email = new Email() { To = "gill@snowball.be", Body = $"A new event was created: {request}", Subject = "A new email was created" };
 
-            try{
-                await _emailService.SendEmail(email);
-            }catch (Exception e)
+            try
             {
-
+                await _emailService.SendEmail(email);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"mailing failed {@event.EventId}");
             }
 
             return @event.EventId;
