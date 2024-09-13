@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using GloboTicket.TicketManagement.Application.Contracts.Persistence;
+using GloboTicket.TicketManagement.Application.Exceptions;
 using GloboTicket.TicketManagement.Application.Features.Events.Commands.UpdateEvent;
 using GloboTicket.TicketManagement.Domain.Entities;
 using MediatR;
@@ -24,6 +25,10 @@ namespace GloboTicket.TicketManagement.Application.Features.Events.Command.Updat
 
             var eventToUpdate = await _eventRepository.GetByIdAsync(request.EventId);
             _mapper.Map(request, eventToUpdate, typeof(UpdateEventCommand), typeof(Event));
+            if (eventToUpdate == null)
+            {
+                throw new NotFoundException(nameof(Event), request.EventId);
+            }
 
             await _eventRepository.UpdateAsync(eventToUpdate);
 
