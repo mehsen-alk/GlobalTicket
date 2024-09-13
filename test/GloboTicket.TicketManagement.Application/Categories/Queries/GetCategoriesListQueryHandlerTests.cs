@@ -36,6 +36,8 @@ namespace GloboTicket.TicketManagement.Application.UnitTests.Categories.Queries
 
             var result = await handler.Handle(new GetCategoriesListQuery(), CancellationToken.None);
 
+            result.ShouldBeOfType<List<CategoryListVm>>();
+
             result.Count.ShouldBe(4);
         }
     }
