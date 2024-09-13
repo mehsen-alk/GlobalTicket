@@ -5,6 +5,7 @@ using GloboTicket.TicketManagement.Application.Features.Events.Commands.UpdateEv
 using GloboTicket.TicketManagement.Application.Features.Events.Queries.GetEventsExports;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using static GloboTicket.TicketManagement.Api.StartupExtensions;
 
 namespace GloboTicket.TicketManagement.Api.Controllers
 {
@@ -64,6 +65,7 @@ namespace GloboTicket.TicketManagement.Api.Controllers
         }
 
         [HttpGet("export", Name = "ExportEvents")]
+        [FileResultContentType("text/csv")]
         public async Task<FileResult> ExportEvents()
         {
             var fileDto = await _mediator.Send(new GetEventsExportsQuery());
@@ -72,4 +74,6 @@ namespace GloboTicket.TicketManagement.Api.Controllers
         }
 
     }
+
+
 }

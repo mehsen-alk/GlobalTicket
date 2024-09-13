@@ -3,6 +3,8 @@ using GloboTicket.TicketManagement.Application;
 using GloboTicket.TicketManagement.Infrastructure;
 using GloboTicket.TicketManagement.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace GloboTicket.TicketManagement.Api
 {
@@ -11,6 +13,7 @@ namespace GloboTicket.TicketManagement.Api
     {
         public static WebApplication ConfigureServices(this WebApplicationBuilder builder)
         {
+            AddSwagger(builder.Services);
             builder.Services.AddApplicationServices();
             builder.Services.AddInfrastructureServices(builder.Configuration);
             builder.Services.AddPersistenceServices(builder.Configuration);
@@ -32,6 +35,16 @@ namespace GloboTicket.TicketManagement.Api
 
         public static WebApplication ConfigurePipeline(this WebApplication app)
         {
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("../swagger/v1/swagger.json", "GloboTicket Ticket Management API");
+                });
+            }
+
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -41,6 +54,26 @@ namespace GloboTicket.TicketManagement.Api
             app.MapControllers();
 
             return app;
+        }
+
+        public static void AddSwagger(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(options =>
+            {
+                options.OperationFilter<FileResultContentTypeOperationFilter>();
+            });
+            services.AddSwaggerGen(c =>
+            {
+                c.OperationFilter<FileResultContentTypeOperationFilter>();
+
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "GloboTicket Ticket Management API",
+                });
+
+                c.OperationFilter<FileResultContentTypeOperationFilter>();
+            });
         }
 
         public static async Task ResetDatabaseAsync(this WebApplication app)
@@ -60,6 +93,54 @@ namespace GloboTicket.TicketManagement.Api
             catch (Exception ex)
             {
 
+            }
+        }
+
+
+        /// <summary>
+        /// Indicates swashbuckle should expose the result of the method as a file in open api (see https://swagger.io/docs/specification/describing-responses/)
+        /// </summary>
+        [AttributeUsage(AttributeTargets.Method)]
+        public class FileResultContentTypeAttribute : Attribute
+        {
+            public FileResultContentTypeAttribute(string contentType)
+            {
+                ContentType = contentType;
+            }
+
+            /// <summary>
+            /// Content type of the file e.g. image/png
+            /// </summary>
+            public string ContentType { get; }
+        }
+
+        public class FileResultContentTypeOperationFilter : IOperationFilter
+        {
+            public void Apply(OpenApiOperation operation, OperationFilterContext context)
+            {
+                var requestAttribute = context.MethodInfo.GetCustomAttributes(typeof(FileResultContentTypeAttribute), false)
+                    .Cast<FileResultContentTypeAttribute>()
+                    .FirstOrDefault();
+
+                if (requestAttribute == null) return;
+
+                operation.Responses.Clear();
+                operation.Responses.Add("200", new OpenApiResponse
+                {
+                    Content = new Dictionary<string, OpenApiMediaType>
+            {
+                {
+                    requestAttribute.ContentType, new OpenApiMediaType
+                    {
+                        Schema = new OpenApiSchema
+                        {
+                            Type = "string",
+                            Format = "binary"
+                        }
+                    }
+                }
+            }
+                });
             }
         }
 
