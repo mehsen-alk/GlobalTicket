@@ -19,6 +19,7 @@ namespace GloboTicket.TicketManagement.Api.Controllers
             _mediator = mediator;
         }
 
+        [Authorize]
         [HttpGet("all", Name = "GetAllCategories")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<List<CategoryListVm>>> GetAllCategories()

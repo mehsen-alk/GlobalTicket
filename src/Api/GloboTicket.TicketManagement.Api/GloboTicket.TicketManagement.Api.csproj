@@ -4,6 +4,7 @@
     <ProjectReference Include="..\..\Core\GloboTicket.TicketManagement.Application\GloboTicket.TicketManagement.Application.csproj" />
     <ProjectReference Include="..\..\Infustrucutre\GloboTicket.TicketManagement.Infrastructure\GloboTicket.TicketManagement.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Infustrucutre\GloboTicket.TicketManagement.Persistence\GloboTicket.TicketManagement.Persistence.csproj" />
+    <ProjectReference Include="..\..\Infustrucutre\GloboTicket.TicketManagement.Identity\GloboTicket.TicketManagement.Identity.csproj" />
   </ItemGroup>
 
   <PropertyGroup>
